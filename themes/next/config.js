@@ -5,7 +5,7 @@ const CONFIG = {
 
   NEXT_NAV_TYPE: 'normal', // ['fixed','autoCollapse','normal'] 分别是固定屏幕顶部并始终显示、固定屏幕顶部且滚动时隐藏，不固定屏幕顶部
 
-  NEXT_POST_LIST_COVER: false, // 文章列表显示封面图
+  NEXT_POST_LIST_COVER: true, // 文章列表显示封面图
   NEXT_POST_LIST_PREVIEW: true, // 显示文章预览
   NEXT_POST_LIST_SUMMARY: false, // 显示用户自定义摘要，有预览时优先只展示预览
 
@@ -31,7 +31,7 @@ const CONFIG = {
   NEXT_WIDGET_TOC: true, // 移动端显示悬浮目录
 
   NEXT_ARTICLE_RELATE_POSTS: true, // 相关文章推荐
-  NEXT_ARTICLE_COPYRIGHT: true, // 文章版权声明
+  NEXT_ARTICLE_COPYRIGHT: false, // 文章版权声明
   NEXT_ARTICLE_INFO: true // 显示文章信息
 
 }
