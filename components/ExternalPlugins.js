@@ -72,7 +72,12 @@ const ExternalPlugin = props => {
     null,
     NOTION_CONFIG
   )
+  // 【提示】Chatbase 与 Chatloom 是两款互相独立的 AI 聊天机器人，下方两处判断
+  // 按各自的配置项独立执行，不再互相压制。如果同时开启这两个机器人，会在页面
+  // 右下角同时出现两个悬浮聊天窗口，容易相互遮挡、点击错位，两个第三方脚本也可能
+  // 争用同一区域样式或全局变量。建议只在二者中开启一个。此处不做拦截，选择权交给用户。
   const CHATBASE_ID = siteConfig('CHATBASE_ID', null, NOTION_CONFIG)
+  const CHATLOOM_AGENT_ID = siteConfig('CHATLOOM_AGENT_ID', null, NOTION_CONFIG)
   const COMMENT_DAO_VOICE_ID = siteConfig(
     'COMMENT_DAO_VOICE_ID',
     null,
@@ -298,24 +303,17 @@ const ExternalPlugin = props => {
         </>
       )}
 
+      {/* 【提示】下面 Chatloom 与 Chatbase 各自按配置独立注入，二者同时开启时
+          页面右下角会出现两个聊天窗口，可能相互重叠或脚本冲突，建议只开启其中一个 */}
+
+      {/* Chatloom 机器人：仅当配置了 CHATLOOM_AGENT_ID 时注入 */}
+      {typeof CHATLOOM_AGENT_ID === 'string' &&
+        CHATLOOM_AGENT_ID.trim() !== '' && <Chatloom />}
+
+      {/* Chatbase 机器人：仅当配置了 CHATBASE_ID 时注入。
+          组件卸载时会移除本组件注入的 script 标签，避免路由切换重复初始化 */}
       {CHATBASE_ID && (
-        <>
-          <script
-            id={CHATBASE_ID}
-            src='https://www.chatbase.co/embed.min.js'
-            defer
-          />
-          <script
-            async
-            dangerouslySetInnerHTML={{
-              __html: `
-                    window.chatbaseConfig = {
-                        chatbotId: "${CHATBASE_ID}",
-                        }
-                    `
-            }}
-          />
-        </>
+        <ChatbaseScript chatbotId={CHATBASE_ID} />
       )}
 
       {CLARITY_ID && (
@@ -587,6 +585,12 @@ const LA51 = dynamic(() => import('@/components/LA51'), {
   ssr: false
 })
 const TianliGPT = dynamic(() => import('@/components/TianliGPT'), {
+  ssr: false
+})
+const Chatloom = dynamic(() => import('@/components/Chatloom'), {
+  ssr: false
+})
+const ChatbaseScript = dynamic(() => import('@/components/ChatbaseScript'), {
   ssr: false
 })
 
