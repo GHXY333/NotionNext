@@ -3,24 +3,38 @@ import ExternalScript from './ExternalScript'
 
 /**
  * Chatloom 聊天机器人挂件
- * 在页面右下角加载官方 widget，外观、语言、欢迎语都在 Chatloom 后台配置，
- * 这里只需要一个公开的 agent id。
+ *
+ * 外观（颜色、位置、语言、欢迎语）全部在 Chatloom 后台配置，
+ * 后台「安装代码」给出的嵌入代码会随这些配置自动变化，因此本组件
+ * 以官方代码为准，而不是 API 文档里的旧示例。
+ *
+ * 官方后台给出的嵌入代码（示例，ID 已打码）：
+ * <script src="https://chatloom.app/widget.min.js" defer
+ *         data-project-id="<your-project-id>"
+ *         data-api-url="https://chatloom.app"
+ *         data-v="10"
+ *         data-launcher-position="bottom-right"></script>
+ *
  * @see https://chatloom.app/zh/docs/api
  */
 export default function Chatloom() {
-  // 只接受非空字符串类型的 agent id
-  const agentId = siteConfig('CHATLOOM_AGENT_ID')
-  if (typeof agentId !== 'string' || agentId.trim() === '') {
+  // 配置项名为 CHATLOOM_AGENT_ID，对应官方代码里的 project-id
+  const projectId = siteConfig('CHATLOOM_AGENT_ID')
+  if (typeof projectId !== 'string' || projectId.trim() === '') {
     return null
   }
 
-  // ExternalScript 会把除 src 以外的参数转成 script 的属性
-  // 注意：官方参数名是 data-agent-id，不是 data-id
+  // ExternalScript 会把除 src 以外的参数原样 setAttribute 到 script 上，
+  // 因此这里的 key 必须与官方代码的属性名完全一致（data-* 连字符写法）。
   return (
     <ExternalScript
       id='chatloom-widget'
-      src='https://chatloom.app/widget.js'
-      data-agent-id={agentId.trim()}
+      src='https://chatloom.app/widget.min.js'
+      defer={true}
+      data-project-id={projectId.trim()}
+      data-api-url='https://chatloom.app'
+      data-v='10'
+      data-launcher-position='bottom-right'
     />
   )
 }
