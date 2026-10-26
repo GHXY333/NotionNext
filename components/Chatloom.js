@@ -1,20 +1,16 @@
+'use client'
+
+import Script from 'next/script'
 import { siteConfig } from '@/lib/config'
-import ExternalScript from './ExternalScript'
 
 /**
  * Chatloom 聊天机器人挂件
  *
- * 外观（颜色、位置、语言、欢迎语）全部在 Chatloom 后台配置，
- * 后台「安装代码」给出的嵌入代码会随这些配置自动变化，因此本组件
- * 以官方代码为准，而不是 API 文档里的旧示例。
+ * 参数以 Chatloom 后台「部署 → 嵌入」页面给出的代码为准。
+ * 该后台代码会随你的颜色、位置等配置自动更新（含 data-v 版本号），
+ * 若小部件突然不显示，第一件事是回后台对照这串代码里的参数。
  *
- * 官方后台给出的嵌入代码（示例，ID 已打码）：
- * <script src="https://chatloom.app/widget.min.js" defer
- *         data-project-id="<your-project-id>"
- *         data-api-url="https://chatloom.app"
- *         data-v="10"
- *         data-launcher-position="bottom-right"></script>
- *
+ * 官方 Next.js 集成指南建议使用 next/script 的 afterInteractive 策略。
  * @see https://chatloom.app/zh/docs/api
  */
 export default function Chatloom() {
@@ -24,17 +20,18 @@ export default function Chatloom() {
     return null
   }
 
-  // ExternalScript 会把除 src 以外的参数原样 setAttribute 到 script 上，
-  // 因此这里的 key 必须与官方代码的属性名完全一致（data-* 连字符写法）。
+  // data-* 属性名必须与官方代码完全一致（连字符写法），
+  // next/script 会把这些属性原样输出到 <script> 标签上。
   return (
-    <ExternalScript
+    <Script
       id='chatloom-widget'
       src='https://chatloom.app/widget.min.js'
-      defer={true}
+      strategy='afterInteractive'
       data-project-id={projectId.trim()}
       data-api-url='https://chatloom.app'
-      data-v='10'
+      data-v='16'
       data-launcher-position='bottom-right'
+      onError={() => console.warn('[Chatloom] widget 脚本加载失败')}
     />
   )
 }
