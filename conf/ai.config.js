@@ -28,6 +28,11 @@ module.exports = {
   // Chatbase 机器人 @see https://www.chatbase.co/
   CHATBASE_ID: process.env.NEXT_PUBLIC_CHATBASE_ID || null,
 
+  // Chatloom 机器人 @see https://chatloom.app/zh/docs/api
+  // 注意：这里只填公开的 agent ID，不要把 Chatloom 的 API key（clf_ 开头）写进任何
+  // NEXT_PUBLIC_ 变量，那会把密钥暴露到浏览器端。
+  CHATLOOM_AGENT_ID: process.env.NEXT_PUBLIC_CHATLOOM_AGENT_ID || null,
+
   // OpenAI compatible AI chat proxy. Keep API keys on the server only.
   AI_CHAT_API: process.env.NEXT_PUBLIC_AI_CHAT_API || '',
   AI_CHAT_TITLE: process.env.NEXT_PUBLIC_AI_CHAT_TITLE || 'AI 助手',
